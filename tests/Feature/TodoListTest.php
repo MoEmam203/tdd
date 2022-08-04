@@ -13,7 +13,8 @@ class TodoListTest extends TestCase
     public function test_get_all_todo_list()
     {
         // preparation / prepare
-        TodoList::create(['name' => 'Test']);
+        // TodoList::create(['name' => 'Test']);
+        TodoList::factory()->create();
 
         // action / preform
         $response = $this->getJson(route('todo-list.index'));
