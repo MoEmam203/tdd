@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\TodoList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TodoListTest extends TestCase
@@ -15,7 +14,7 @@ class TodoListTest extends TestCase
     public function setUp():void
     {
         parent::setUp();
-        $this->list = TodoList::factory()->create();
+        $this->list = TodoList::factory()->create(['name' => 'my list']);
     }
 
     /** @test */
@@ -55,6 +54,34 @@ class TodoListTest extends TestCase
         $this->withExceptionHandling();
         $this->postJson(route('todo-list.store'))
             // ->assertStatus(422); // 422 status code for validation errors
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['name']);
+    }
+
+    /** @test */
+    public function delete_todo_list()
+    {
+        $this->deleteJson(route('todo-list.destroy',$this->list))
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing('todo_lists',['name' => 'my list']);
+    }
+
+    /** @test */
+    public function update_todo_list()
+    {
+        $this->putJson(route('todo-list.update',$this->list),['name' => 'updated list'])
+            ->assertOk();
+
+        $this->assertDatabaseHas('todo_lists',['id' => $this->list->id , 'name' => 'updated list']);
+    }
+
+    /** @test */
+    public function while_updating_todo_list_name_field_is_require()
+    {
+        $this->withExceptionHandling();
+
+        $this->putJson(route('todo-list.update',$this->list))
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['name']);
     }
