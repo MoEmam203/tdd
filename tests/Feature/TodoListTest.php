@@ -48,4 +48,14 @@ class TodoListTest extends TestCase
         $this->assertEquals($list->name,$response['name']);
         $this->assertDatabaseHas('todo_lists',['name' => $list->name]);
     }
+
+    /** @test */
+    public function while_storing_todo_list_name_field_is_require()
+    {
+        $this->withExceptionHandling();
+        $this->postJson(route('todo-list.store'))
+            // ->assertStatus(422); // 422 status code for validation errors
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['name']);
+    }
 }
