@@ -17,4 +17,11 @@ class TodoListController extends Controller
     {
         return response($list);
     }
+
+    public function store(Request $request)
+    {
+        $list = TodoList::create(['name' => $request->name]);
+
+        return $list;
+    }
 }
