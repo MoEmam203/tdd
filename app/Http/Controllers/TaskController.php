@@ -27,6 +27,6 @@ class TaskController extends Controller
     
     public function update(Task $task,Request $request)
     {
-        return $task->update(['title' => $request->title]);
+        return $task->update($request->all());
     }
 }
