@@ -15,8 +15,9 @@ class TaskTest extends TestCase
     public function fetch_all_tasks_of_a_todo_list()
     {
         $list = $this->createTodoList();
+        $list2 = $this->createTodoList();
         $task = $this->createTask(['todo_list_id' => $list->id]);
-        $this->createTask(['todo_list_id' => 2]);
+        $this->createTask(['todo_list_id' => $list2->id]);
 
         $response = $this->getJson(route('todo-list.tasks.index',$list))
             ->assertOk()
