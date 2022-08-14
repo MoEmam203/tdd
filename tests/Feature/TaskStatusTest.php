@@ -14,6 +14,7 @@ class TaskStatusTest extends TestCase
     /** @test */
     public function a_task_status_can_be_changed()
     {
+        $this->authUser();
         $task = $this->createTask();
 
         $this->patchJson(route('tasks.update',$task->id),['status' => Task::STARTED]);

@@ -11,6 +11,11 @@ class TaskTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp():void
+    {
+        parent::setUp();
+        $this->authUser();
+    }
     /** @test */
     public function fetch_all_tasks_of_a_todo_list()
     {
