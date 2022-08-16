@@ -10,7 +10,7 @@ class TodoListController extends Controller
 {
     public function index()
     {
-        return response(TodoList::all());
+        return response(auth()->user()->todo_lists);
     }
 
     public function show(TodoList $todo_list)
@@ -20,7 +20,7 @@ class TodoListController extends Controller
 
     public function store(TodoListRequest $request)
     {
-        return TodoList::create(['name' => $request->name]);
+        return auth()->user()->todo_lists()->create($request->validated());
     }
 
     public function destroy(TodoList $todo_list)
@@ -31,6 +31,6 @@ class TodoListController extends Controller
 
     public function update(TodoListRequest $request,TodoList $todo_list)
     {
-        return $todo_list->update(['name' => $request->name]);
+        return $todo_list->update($request->validated());
     }
 }
