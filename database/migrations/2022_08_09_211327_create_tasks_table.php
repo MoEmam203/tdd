@@ -24,6 +24,8 @@ class CreateTasksTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
+            $table->text('description')->nullable();
+            // $table->foreignId('label_id')->constrained()->cascadeOnDelete();
             $table->string('status')->default(Task::NOT_STARTED);
             $table->timestamps();
         });
