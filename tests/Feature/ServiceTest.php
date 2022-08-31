@@ -35,14 +35,15 @@ class ServiceTest extends TestCase
     public function service_callback_can_store_token()
     {
         $this->mock(Client::class, function (MockInterface $mock) {
-            $mock->shouldReceive('fetchAccessTokenWithAuthCode')->andReturn('fake-token');
+            $mock->shouldReceive('fetchAccessTokenWithAuthCode')
+                ->andReturn(['access-token' => 'fake-token']);
         });
 
         $res = $this->postJson(route('web-service.callback',['code' => 'dummy-code']))->assertCreated();
 
         $this->assertDatabaseHas('web_services',[
             'user_id' => $this->user->id,
-            'token' => '"{\"access_token\":\"fake-token\"}"',
+            'token' => json_encode(['access-token' => 'fake-token']),
             'name' => 'google-drive'
         ]);
 
@@ -52,6 +53,13 @@ class ServiceTest extends TestCase
     /** @test */
     public function data_of_a_week_can_be_stored_on_google_drive()
     {
+        $this->createTask();
+        $this->createTask(['created_at' => now()->subDays(3)]);
+        $this->createTask(['created_at' => now()->subDays(4)]);
+        $this->createTask(['created_at' => now()->subDays(5)]);
+        $this->createTask(['created_at' => now()->subDays(6)]);
+        $this->createTask(['created_at' => now()->subDays(8)]);
+
         $this->mock(Client::class, function (MockInterface $mock) {
             $mock->shouldReceive('setAccessToken');
             $mock->shouldReceive('getLogger->info');

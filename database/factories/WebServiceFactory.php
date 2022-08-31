@@ -19,7 +19,7 @@ class WebServiceFactory extends Factory
                 return User::factory()->create()->id;
             },
             'name' => 'google-drive',
-            'token' => ['access-token' => 'fake-token']
+            'token' => ['access_token' => 'fake-token']
         ];
     }
 }
