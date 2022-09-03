@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Google\Client;
 use Google\Service\Drive;
@@ -44,7 +45,8 @@ class WebServiceController extends Controller
         $tasks = Task::where('created_at','>=',  now()->subDays(7))->get();
         // create json file to these tasks
         $jsonFileName = 'tasks.json';
-        Storage::put("/public/temp/$jsonFileName",$tasks->toJson());
+
+        Storage::put("/public/temp/$jsonFileName",TaskResource::collection($tasks)->toJson());
         // zip json file
         $zip = new ZipArchive();
         $zipFileName = storage_path('/app/public/temp/' . now()->timestamp . '-tasks.zip');
